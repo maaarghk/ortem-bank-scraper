@@ -1,0 +1,19 @@
+version: '3.0'
+
+services:
+    puppeteer:
+        build: .
+        environment:
+          - PPTR_NO_SANDBOX=0
+          - PPTR_HEADLESS=0
+          - DISPLAY=${DISPLAY}
+          - XAUTHORITY=/tmp/.docker.xauth
+        env_file: secrets.env
+        cap_add:
+          - SYS_ADMIN
+        ipc: host
+        volumes:
+            - ./app:/home/node/app
+            - ./userdata:/home/node/userdata
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /tmp/.docker.xauth:/tmp/.docker.xauth:rw

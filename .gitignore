@@ -1,0 +1,5 @@
+secrets.env
+userdata/*
+!userdata/.gitkeep
+app/screenshot
+app/node_modules

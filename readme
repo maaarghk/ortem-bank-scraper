@@ -1,0 +1,36 @@
+screen scraper for "ortem" bank
+-------------------------------
+
+insert blurb / rant here about """""open""""" banking """""standards"""""  :eye roll emoj:
+
+
+anyway so like i needed to do what the open standards ppl call "screen scraping"
+so i could get my statement uploaded to my accounting software automatically
+
+my accounting software is rightly banned from doing this itself because the
+bastard services which used to offer this basically saved your password plain
+text (as this does), but nothing stops me from doing it myself of course.
+
+this is made difficult because of 2FA so first time run it not in headless mode
+and it'll wait for you to manually enter the 2FA for 15 mins and finish.
+
+I actually think the userdata workaround is probably not required because they
+do some kind of fingerprinting and use that to configure the trusted device but
+i think it can't hurt to persist cookies between sessions.
+
+in any case we use it to store downloads.
+
+run it non headless first time locally...
+```
+touch /tmp/.docker.xauth
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f /tmp/.docker.xauth nmerge -
+docker-compose build
+docker-compose run puppeteer npm i
+docker-compose run puppeteer
+```
+
+
+then you can stick something like run_and_post.php in cron
+
+(probs should just return the "dry" filename so that run_and_post could be a
+bash script but I was reusing old code)
