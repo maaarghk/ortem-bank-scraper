@@ -10,9 +10,9 @@ async function downloadStatement(page, uuid) {
     await page.click("button[value=Continue]");
 
     // Password page
-    await page.waitForSelector('button[type=submit][aria-label="Submit Password"]');
+    await page.waitForSelector('.ib-password-container .ib-ibid-button button.mat-primary');
     const positions = await page.evaluate(() => {
-        return Array.from(document.querySelectorAll('div.positions')).map((el) => {
+        return Array.from(document.querySelectorAll('.ib-seed-pos')).map((el) => {
             return Number.parseInt(el.innerText);
         })
     })
@@ -24,10 +24,13 @@ async function downloadStatement(page, uuid) {
     const secondNumber = secretNumber[positions[1] - 1];
     const thirdNumber = secretNumber[positions[2] - 1];
 
+    console.log(positions[0], positions[1], positions[2]);
+    console.log(firstNumber, secondNumber, thirdNumber);
+/*
     const firstLetter = password[positions[3] - 1];
     const secondLetter = password[positions[4] - 1];
     const thirdLetter = password[positions[5] - 1];
-
+*/
     /*
     console.log(positions);
 
@@ -43,20 +46,31 @@ async function downloadStatement(page, uuid) {
     .catch(() => {
         // Do nothing if the cookie bar didn't come up
     })
-    await page.select('[name=security0]', firstNumber);
+    await page.type('[name=security0]', firstNumber, {delay: 0});
     await page.waitForTimeout(300);
-    await page.select('[name=security1]', secondNumber);
+    await page.type('[name=security1]', secondNumber, {delay: 0});
     await page.waitForTimeout(300);
-    await page.select('[name=security2]', thirdNumber);
-    await page.waitForTimeout(300);
+    await page.type('[name=security2]', thirdNumber, {delay: 0});
+    await page.waitForTimeout(300);/*
     await page.type("input[name=password0]", firstLetter, {delay: 0});
     await page.waitForTimeout(300);
     await page.type("input[name=password1]", secondLetter, {delay: 0});
     await page.waitForTimeout(300);
     await page.type("input[name=password2]", thirdLetter, {delay: 0});
-    await page.waitForTimeout(300);
+    await page.waitForTimeout(300);*/
 
-    await page.click('button[type=submit][aria-label="Submit Password"]');
+    await page.type("input[name=password0]", password, {delay: 70});
+    await page.waitForTimeout(300);
+    await page.evaluate(() => {
+        document
+            .querySelectorAll('.ib-ibid-button button.mat-primary')[0]
+            .scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            })
+    });
+    await page.click('.ib-ibid-button button.mat-primary');
 
     // TODO.... 2fa
     /**
